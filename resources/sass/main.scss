@@ -1,0 +1,30 @@
+@import "bootstrap";
+@import '~bootstrap/scss/bootstrap';
+.wrapper-selections {
+    select {
+        min-width: 200px
+    }
+    label {
+        min-width: 100px
+    }
+}
+
+.wrapper-timer {
+    button {}
+}
+
+.wrapper-lef-column {
+    min-width: 360px
+}
+
+.wrapper-label {
+    @extend .col-4;
+}
+
+.wrapper-select {
+    @extend .col-5;
+}
+
+.wrapper-button {
+    @extend .col-3;
+}
