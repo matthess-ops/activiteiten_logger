@@ -339,8 +339,8 @@
             
                                                 </select>                                    </div>
             
-                                            <div class="col-sm-2">
-                                                <input class="btn btn-primary" type="submit" name="Remove_Option" value="Rem_option">
+                                            <div class="col-sm-4">
+                                                <input class="btn btn-secondary" type="submit" name="Remove_Option" value="Rem_opt">
                                             
                                                 <input class="btn btn-primary" type="submit" name="Remove_Group" value="Rem_group">
 

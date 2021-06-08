@@ -38,6 +38,11 @@ Route::post('/startTimer', 'TimerDataController@startTimer')->name('TimerData.st
 
 
 
+Route::post('/createpost', 'PostsController@create')->name('Post.create');
+
+
+
+
  
 
 

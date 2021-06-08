@@ -1,8 +1,7 @@
 import moment from 'moment';
-console.log("cur time ", moment.now());
 
 
-if (timerRunning == false) {
+if (timerRunning == true) {
     var startTimestamp = moment(startTimestampIn * 1000);
 
     setInterval(function() {
@@ -28,6 +27,8 @@ if (timerRunning == false) {
             minsString = mins.toString()
 
         }
+        // console.log(hoursString + ":" + minsString);
+        // document.getElementById("timer").innerHTML = "00:00";
 
         document.getElementById("timer").innerHTML = hoursString + ":" + minsString;
     }, 1000);

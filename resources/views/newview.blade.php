@@ -23,12 +23,10 @@
 </head>
 
 <body>
+
     <script>
-     
         var startTimestampIn = @json($startTimestamp);
         var timerRunning = @json($timerRunning)
-    
-
 
     </script>
 
@@ -53,9 +51,9 @@
         </div>
 
     </nav>
+
     <div class="row">
-        <h3>{{$startTimestamp}}</h3>
-   
+
 
         <div class="container-fluid" style="max-width: 1600px">
             <div class="card">
@@ -63,13 +61,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-4 bg-success">
-                            {{-- <form action="{{ route('TimerData.startTimer') }}" method="post">
-                        @csrf
-                        <input type="hidden" name="suggestion" value="{{json_encode($suggestions,TRUE)}}">
-
-                        <input class="btn btn-primary" type="submit" value="start">
-
-                      </form> --}}
+             
 
 
 
@@ -80,7 +72,8 @@
 
 
                                 <div class="form-group row d-flex justify-content-between">
-                                    <h3 id="timer" for="" class="">00:00</h3>
+                                    {{-- margin moet op 10px staan anders gaat boostrap vreemd doen met de layout --}}
+                                    <h3 style="margin: 10px" id="timer">00:00</h3>
                                     <div class="">
                                         @if ($timerRunning == true)
                                             <input class="btn btn-primary" type="submit" value="stoppen">
@@ -303,35 +296,51 @@
                 <div class="col-sm-6">
                     <div class="card">
                         <div class="card-header">Dagboek</div>
-                        <div class="card-body"> </div>
-                    </div>
-                </div>
+                        <div class="card-body">
+                            <form action="{{ route('Post.create') }}" method="POST">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="DiaryTextInput">Bericht</label>
+                                    <textarea class="form-control" name = "DiaryTextInput" id="DiaryTextInput" rows="8"></textarea>
+                                    <input class="btn btn-primary" type="submit" value="opslaan">
 
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-header">Statistics</div>
-                            <div class="card-body"> </div>
+
+                                </div>
+
+                            </form>
+
+
+
+
                         </div>
                     </div>
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">Statistics</div>
+                        <div class="card-body"> </div>
+                    </div>
+                </div>
             </div>
 
-         
+
+
+
+
+
+
+
+
+
 
 
         </div>
+
+
+
+
+    </div>
 
 
 

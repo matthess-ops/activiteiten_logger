@@ -22,7 +22,7 @@ class TimerDataSeeder extends Seeder
                 "pijnstillers"=>"temgesic",
                 "houding" => "liggen",
                 "experiments"=>"elke dag lopen",
-                "timestamp"=>1622543389,
+                "startTimestamp"=>1622543389,
             ],
              'mainActivities'=> ["werken","rusten","huishouden","verzorging","ontspanning"],
              'subActivities'=> ["programmeren","lezen","onderzoek","afwassen","koken","douchen","film kijken"],

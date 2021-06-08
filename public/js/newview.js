@@ -21702,9 +21702,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 
-console.log("cur time ", moment__WEBPACK_IMPORTED_MODULE_0___default.a.now());
 
-if (timerRunning == false) {
+if (timerRunning == true) {
   var startTimestamp = moment__WEBPACK_IMPORTED_MODULE_0___default()(startTimestampIn * 1000);
   setInterval(function () {
     var currentTimestamp = moment__WEBPACK_IMPORTED_MODULE_0___default()(moment__WEBPACK_IMPORTED_MODULE_0___default.a.now());
@@ -21724,7 +21723,9 @@ if (timerRunning == false) {
       minsString = "0" + mins.toString();
     } else {
       minsString = mins.toString();
-    }
+    } // console.log(hoursString + ":" + minsString);
+    // document.getElementById("timer").innerHTML = "00:00";
+
 
     document.getElementById("timer").innerHTML = hoursString + ":" + minsString;
   }, 1000);
