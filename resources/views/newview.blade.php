@@ -26,9 +26,16 @@
 
     <script>
         var startTimestampIn = @json($startTimestamp);
-        var timerRunning = @json($timerRunning)
+        var timerRunning = @json($timerRunning);
+        var logs = @json($todayLogs);
+
+
+     
+
 
     </script>
+    {{-- dit hier laten als je dit verwijderd begint het dashboard te knipperen --}}
+    {{$timerRunning}} 
 
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary center">
@@ -45,7 +52,7 @@
                             class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link" href="{{ route('ConfigData.index') }}">Config</a>
                     <a class="nav-item nav-link" href="#">Diary</a>
-                    <a class="nav-item nav-link" href="#">Logs</a>
+                    <a class="nav-item nav-link" href="{{ route('Logs.index') }}">Logs</a>
                 </div>
             </div>
         </div>
@@ -286,7 +293,10 @@
 
             </div>
 
-            {{ var_dump($scaledOptions) }}
+            {{-- {{ var_dump($startTimestamp) }}
+            {{ dd($__data) }} --}}
+
+
         </div>
     </div>
 
@@ -319,7 +329,10 @@
                 <div class="col-sm-6">
                     <div class="card">
                         <div class="card-header">Statistics</div>
-                        <div class="card-body"> </div>
+                        <div class="card-body">
+                            <canvas id="chart"></canvas>
+
+                        </div>
                     </div>
                 </div>
             </div>

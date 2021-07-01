@@ -18,8 +18,11 @@ use Illuminate\Support\Facades\Route;
 //     return view('configdata' );
 
 
+Route::get('/logs', 'LogsController@index')->name('Logs.index');
 
-// })->name('configdata');
+
+
+
 Route::get('/configdata', 'ConfigDataController@index')->name('ConfigData.index');
 Route::post('/store', 'ConfigDataController@store')->name('ConfigData.store');
 Route::post('/storefixed', 'ConfigDataController@storeFixed')->name('ConfigData.storeFixed');
@@ -39,6 +42,11 @@ Route::post('/startTimer', 'TimerDataController@startTimer')->name('TimerData.st
 
 
 Route::post('/createpost', 'PostsController@create')->name('Post.create');
+
+
+
+Route::get('/test', 'CreateTestLogs@test')->name('CreateTestLogs.test');
+
 
 
 

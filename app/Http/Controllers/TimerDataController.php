@@ -9,14 +9,28 @@ use Carbon\Carbon;
 
 class TimerDataController extends Controller
 {
+    private function getTodayLogs(){
+        $logs = Logs::whereDate('start', Carbon::now())->get("log");
+        return $logs;
+      
+
+    }
+
+
     public function readTimerData(){
+      $todayLogs = $this-> getTodayLogs();
       $timerData = TimerData::find(1);
+      $kakos = ["fack"=>"beh","kek"=>"beh","kak"=>"beh"];
+
       $startTime = "empty";
+      
       if(!empty($timerData['previousLog'])){
           $startTime =$timerData['previousLog'];
-      }
 
-      return view('newview',$timerData,$startTime );
+      }
+      $timerData["todayLogs"] = $todayLogs;
+      //volgende keer eerste alle vars in dictionary stoppen voo retrun
+      return view('newview',$timerData,$startTime); //$timerData,$startTime,$test
     }
 
     public function updateSelection(Request $request){
