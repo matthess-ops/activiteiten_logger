@@ -1,3 +1,11 @@
+{{-- updates for next version --}}
+{{--1: Main activities and sub Activities form group are structurally the same, thus an subview or blade component should be made to prevent code duplication  --}}
+{{--2: On each blade the navbar is duplicated, make the navbar a layout and extend it into here --}}
+{{--3: the 3 cards, timer, diary and statistics should be made as sections. To make the code in this file more managable--}}
+
+
+
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -5,14 +13,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Dashboard - Activiteiten logger</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
 
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
     <script src="{{ asset('js/newview.js') }}" defer></script>
 
     <!-- Styles -->
@@ -23,6 +31,8 @@
 </head>
 
 <body>
+
+        {{-- view vars that are needed as js vars --}}
 
     <script>
         var startTimestampIn = @json($startTimestamp);
@@ -49,7 +59,22 @@
                     <a class="nav-item nav-link" href="{{ route('ConfigData.index') }}">Config</a>
                     <a class="nav-item nav-link" href="{{ route('post.index') }}">Diary</a>
                     <a class="nav-item nav-link" href="{{ route('Logs.index') }}">Logs</a>
+                        {{-- log out code --}}
+
+                    <a class="nav-item nav-link justify-content-end" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                                  document.getElementById('logout-form').submit();">
+                     {{ __('Logout') }}
+                 </a>
+
+                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                     @csrf
+                 </form>       
+                
+                
                 </div>
+
+                
             </div>
         </div>
 
@@ -60,22 +85,18 @@
 
         <div class="container-fluid" style="max-width: 1600px">
             <div class="card">
+                {{-- timer card --}}
+
                 <div class="card-header">Timer</div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-4">
-
-
-
-
                             <form action="{{ route('TimerData.startTimer') }}" method="post">
-
                                 @csrf
-
-
+                                {{-- Timer element and start and stop button --}}
 
                                 <div class="form-group row d-flex justify-content-between">
-                                    {{-- margin moet op 10px staan anders gaat boostrap vreemd doen met de layout --}}
+                                    {{-- margin needs to be 10px else bootstrap will malfunction --}}
                                     <h3 style="margin: 10px" id="timer">00:00</h3>
                                     <div class="">
                                         @if ($timerRunning == true)
@@ -88,6 +109,7 @@
                                     </div>
                                 </div>
 
+                                {{-- Main activities form group --}}
 
                                 <div class="form-group row d-flex justify-content-between">
                                     <label for="mainActivities" class="col-form-label">Main Activity</label>
@@ -107,6 +129,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                {{-- Sub activities form group --}}
 
                                 <div class="form-group row d-flex justify-content-between">
                                     <label for="subActivities" class="col-form-label">Sub Activity</label>
@@ -125,9 +148,10 @@
                                     </div>
                                 </div>
 
+                                {{-- experiment form group --}}
 
                                 <div class="form-group row d-flex justify-content-between">
-                                    <label for="experiments" class="col-form-label">Sub Activity</label>
+                                    <label for="experiments" class="col-form-label">Experiment</label>
                                     <div class="">
                                         <select class="form-control" name="experiments" id="experiments">
                                             @foreach ($experiments as $experiment)
@@ -143,6 +167,7 @@
                                     </div>
                                 </div>
 
+                                {{-- scaled options form group --}}
 
                                 @foreach ($scaledOptions as $scaledOption)
 
@@ -153,14 +178,13 @@
                                             <select class="form-control" name="{{ $scaledOption }}"
                                                 id="{{ $scaledOption }}">
 
-
-
-
                                                 @if (array_key_exists($scaledOption, $currentSelections) == true)
-                                                    @for ($i = 1; $i < 10; $i++)
+                                                    @for ($i = 1; $i < 10; $i++) {{-- i is 10 because the scale is from 0-10 --}}
+
 
                                                         @if ($i ==
-                                                        $currentSelections[$scaledOption]) <option
+                                                        $currentSelections[$scaledOption]) <option {{-- blade code to select the previous selected scale value 0 -10 --}}
+
                                                         value="{{ $i }}"
                                                         selected>{{ $i }}</option>
 
@@ -168,7 +192,8 @@
                                                         <option
                                                         value="{{ $i }}">{{ $i }}</option> @endif
                                                     @endfor
-                                                @else
+                                                @else   {{-- there could be an exception here, if a new scaled value doenst have a previous scale value. This means there would be no value pre selected this could cause problems when the form is submitted without the user selecting a value  --}}
+
                                                     @for ($i = 1; $i < 10; $i++)
                                                         <option value="{{ $i }}">{{ $i }}
                                                         </option>
@@ -184,6 +209,7 @@
                                 @endforeach
 
 
+                                {{-- Fixed options form group --}}
 
                                 @foreach ($fixedOptions as $key => $values)
 
@@ -211,16 +237,14 @@
 
                                                     @endforeach
                                                 @else
+                                                {{-- Same error as with scaled options form group could happen here --}}
+
+                                                
                                                     @foreach ($values as $value)
 
 
                                                         <option value={{ $value }} selected>{{ $value }}
                                                         </option>
-
-
-
-
-
 
                                                     @endforeach
                                                 @endif
@@ -233,16 +257,10 @@
                                 @endforeach
 
 
-
-
-
-
-
-
-
                             </form>
                         </div>
 
+                        {{-- Activities suggestions table --}}
 
                         <div class="col-sm-8 ">
                         
@@ -251,9 +269,6 @@
                                 <table class="table float-left ">
                                     <thead>
                                         <tr>
-                                         
-
-
 
                                             @foreach (array_keys($suggestions[0]) as $suggestion)
                                                 <th scope="col">{{ $suggestion }} </th>
@@ -264,9 +279,6 @@
                                     </thead>
 
                                     <tbody>
-
-
-
                                         @foreach ($suggestions as $suggestion)
                                             <tr>
 
@@ -306,8 +318,10 @@
         <div class="container-fluid" style="max-width: 1600px">
             <div class="row">
                 <div class="col-sm-6">
+                  {{-- Diary card  --}}
+
                     <div class="card">
-                        <div class="card-header">Dagboek</div>
+                        <div class="card-header">Diary</div>
                         <div class="card-body">
                             <form action="{{ route('Post.create') }}" method="POST">
                                 @csrf
@@ -332,7 +346,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-sm-6">{{-- Statistics card --}}
                     <div class="card">
                         <div class="card-header">Statistics</div>
                         <div class="card-body">
@@ -343,30 +357,9 @@
                 </div>
             </div>
 
-
-
-
-
-
-
-
-
-
-
-
         </div>
 
-
-
-
     </div>
-
-
-
-
-
-
-
 
 </body>
 

@@ -1,3 +1,12 @@
+{{-- updates for next version --}}
+{{--1: On each blade the navbar is duplicated, make the navbar a layout and extend it into here --}}
+{{--2: a small problem is that the user can try to make a graph while no logs are selected, in next version the make graph button needs to be hidden/black/alert popup when there are not logs --}}
+{{--3: The activity, fixed and scaled options are now only populated with their associatd mainActivities,subActivities options etc columns in the timer_data table
+however. These options are not the same in time. Therefore if an option is removed, it wont be shown as a graphing option. While there might
+be logs that have this value. This could be fixed by checking the selected logs for the different options
+    --}}
+
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -5,24 +14,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Logs - Activiteiten logger</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
 
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+ 
     <script src="{{ asset('js/logs.js') }}" defer></script>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
 
 
 </head>
 
 <body>
+        {{-- view vars that are needed as js vars --}}
 
     <script>
         var logss = @json($logss);
@@ -48,6 +57,15 @@
                     <a class="nav-item nav-link" href="{{ route('ConfigData.index') }}">Config</a>
                     <a class="nav-item nav-link" href="{{ route('post.index') }}">Diary</a>
                     <a class="nav-item nav-link  active" href="{{ route('Logs.index') }}">Logs</a>
+                    <a class="nav-item nav-link justify-content-end" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                                  document.getElementById('logout-form').submit();">
+                     {{ __('Logout') }}
+                 </a>
+
+                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                     @csrf
+                 </form> 
                 </div>
             </div>
         </div>
@@ -69,7 +87,7 @@
                                 <label for="start">Start date:</label>
 
 
-                                <input id="startDate" type="date" value="2021-08-06" id="start" name="log-start">
+                                <input id="startDate" type="date" value="2021-07-06" id="start" name="log-start">
 
                             </div>
 
@@ -124,9 +142,6 @@
                     <div id="activityDiv" class="col-sm-4 ">
                         <div class="row">
 
-
-
-
                             <div class="form-group">
                                 <label for="activityInput">Activity options</label>
                                 <input class="btn btn-primary " type="button" name="activityInput" id="activityInput"
@@ -173,8 +188,6 @@
                                     id="scaledInput" type="submit" value="Add Scaled">
                             </div>
 
-
-
                         </div>
 
                         <div class="row">
@@ -182,10 +195,6 @@
 
                             </div>
                         </div>
-
-
-
-
 
                     </div>
 

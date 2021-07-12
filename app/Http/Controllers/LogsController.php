@@ -20,7 +20,7 @@ class LogsController extends Controller
         $startTimestamp= Carbon::parse($values['log-start']);
         $endTimestamp = Carbon::parse($values['log-end']);
 
-        // error_log("kut format ".$startTimestamp->toDateString());
+        error_log("kut format ".$startTimestamp->toDateString());
 
         $logs = Logs::whereDate('start','>=' ,$startTimestamp )->whereDate('end','<=',$endTimestamp)->get("log");
         error_log("nr of logs found ".count($logs));
@@ -45,7 +45,7 @@ class LogsController extends Controller
 
 
     public function index(){
-    //  error_log("dit werkt");
+    error_log("dit werkt");
     // $logs = ["beh"=>"thest","bedddh"=>"thddest"];
     $timerData = TimerData::find(1);
     $logs = [];

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Config - Activiteiten logger</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
@@ -36,7 +36,16 @@
                 <a class="nav-item nav-link  active" href="{{ route('ConfigData.index') }}">Config</a>
                 <a class="nav-item nav-link" href="{{ route('post.index') }}">Diary</a>
                 <a class="nav-item nav-link" href="{{ route('Logs.index') }}">Logs</a>
-                </div>
+                <a class="nav-item nav-link justify-content-end" href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                              document.getElementById('logout-form').submit();">
+                 {{ __('Logout') }}
+             </a>
+
+             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                 @csrf
+             </form> 
+            </div>
             </div>
         </div>
 

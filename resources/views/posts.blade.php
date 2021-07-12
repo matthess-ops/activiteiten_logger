@@ -1,3 +1,10 @@
+{{-- updates for next version --}}
+{{--1: On each blade the navbar is duplicated, make the navbar a layout and extend it into here --}}
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -5,14 +12,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Diary - Activiteiten logger</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
 
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -38,6 +45,15 @@
                     <a class="nav-item nav-link" href="{{ route('ConfigData.index') }}">Config</a>
                     <a class="nav-item nav-link  active" href="{{ route('post.index') }}">Diary</a>
                     <a class="nav-item nav-link" href="{{ route('Logs.index') }}">Logs</a>
+                    <a class="nav-item nav-link justify-content-end" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                                  document.getElementById('logout-form').submit();">
+                     {{ __('Logout') }}
+                 </a>
+
+                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                     @csrf
+                 </form> 
                 </div>
             </div>
         </div>
