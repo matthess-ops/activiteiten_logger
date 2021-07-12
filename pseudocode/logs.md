@@ -107,4 +107,54 @@ function determineNrDaysWeeksWorkedOfLog(logs):
 
     dateRangeArrayValues.push(ouput option value)
 
-    retun ouputoption,dateRangeArrayValues
+    return ouputoption,dateRangeArrayValues
+
+
+function calcFixedOutput(output option,dividedlogs):
+    houding heeft 3 values, liggen,zitten,staan
+    filter de array for elke van deze 3 dus je hebt dan 3 arrays en daar calc je dan
+    de sizzle van
+    functionCalculateData(output option,dividedLogs)
+
+    
+function calcScaledOutput():
+    aveLevel;
+
+    foreach logSet in logSets:
+        calc de average level pijn geluk level 
+
+    return dit
+
+
+
+---activities
+
+functin getActivitiesData
+
+filterLogsForDataRange(logs,startDate,endDate)
+divideLogsForDateInteral([daily,weekly,monthly],logs)
+allActivitesTableData = []
+foreach Activities option
+    filterLogsForMainAndSubActivity(mainAct,subAct)
+    functionCalculateData(output option,dividedLogs)
+
+
+return allactivitiesTAbleData
+
+
+function fixed:
+    filterLogsForDataRange(logs,startDate,endDate)
+    divideLogsForDateInteral([daily,weekly,monthly],logs)
+    foreach fixe doption
+        filterLogsForMainAndSubActivity(mainAct,subAct)
+        calcFixedouput
+
+
+function scaled:
+   filterLogsForDataRange(logs,startDate,endDate)
+    divideLogsForDateInteral([daily,weekly,monthly],logs)
+    foreach sacled option
+    filterLogsForMainAndSubActivity(mainAct,subAct)
+    calcScaledOutput
+
+

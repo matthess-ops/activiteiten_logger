@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             TimerDataSeeder::class,
             testSeeder::class,
             testLogsSeeder::class,
+            PostsSeeder::class,
          
         ]);
     }

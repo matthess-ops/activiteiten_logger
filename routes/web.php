@@ -18,7 +18,16 @@ use Illuminate\Support\Facades\Route;
 //     return view('configdata' );
 
 
+Route::post('/createpost', 'PostsController@create')->name('post.create');
+Route::get('/posts', 'PostsController@testData')->name('post.index');
+Route::post('/postdelsave', 'PostsController@saveDelete')->name('post.saveDelete');
+
+
+
+
+
 Route::get('/logs', 'LogsController@index')->name('Logs.index');
+Route::post('/getlogs', 'LogsController@getlogs')->name('Logs.getLogs');
 
 
 

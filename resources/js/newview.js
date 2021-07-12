@@ -55,7 +55,6 @@ const graphDatasets = (data, dataOfInterest) => {
     // backgroundColor: '#D6E9C6',
     let datasets = []
     data.forEach((dat, index) => {
-        console.log("dat ", dat)
         let entry = {}
         entry["label"] = dataOfInterest + " " + dat['label']
         entry["data"] = dat[dataOfInterest]
@@ -160,11 +159,16 @@ const makeStatisticGraph = () => {
     }
 
     const logsMainActivities = getAllColumnValues("mainActivities")
+        // console.log("main activities")
+        // console.log(logsMainActivities.length)
     const logsSubActivities = getAllColumnValues("subActivities")
     const data = calcSubMainActivitiesTime(logsMainActivities, logsSubActivities)
 
     const mainSubActColumns = graphDatasets(data[0], "totalMins")
     makeGraph(mainSubActColumns, data[1])
+
+    console.log("logsss input")
+    console.log(logs)
 
 
 
@@ -199,8 +203,7 @@ const timer = () => {
                 minsString = mins.toString()
 
             }
-            // console.log(hoursString + ":" + minsString);
-            // document.getElementById("timer").innerHTML = "00:00";
+
 
             document.getElementById("timer").innerHTML = hoursString + ":" + minsString;
         }, 1000);

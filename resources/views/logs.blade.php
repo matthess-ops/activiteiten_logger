@@ -13,6 +13,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/logs.js') }}" defer></script>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -22,6 +23,17 @@
 </head>
 
 <body>
+
+    <script>
+        var logss = @json($logss);
+        var timerData = @json($timerData);
+        var dates = @json($datesIn);
+
+    </script>
+
+
+
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary center">
         <div class="container">
 
@@ -32,11 +44,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav " style="font-size: 1.6em">
-                    <a class="nav-item nav-link active" href="{{ route('TimerData.readData') }}">Dashboard <span
-                            class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="{{ route('TimerData.readData') }}">Dashboard</a>          
                     <a class="nav-item nav-link" href="{{ route('ConfigData.index') }}">Config</a>
-                    <a class="nav-item nav-link" href="#">Diary</a>
-                    <a class="nav-item nav-link" href="{{ route('Logs.index') }}">Logs</a>
+                    <a class="nav-item nav-link" href="{{ route('post.index') }}">Diary</a>
+                    <a class="nav-item nav-link  active" href="{{ route('Logs.index') }}">Logs</a>
                 </div>
             </div>
         </div>
@@ -48,13 +59,167 @@
             <div class="card">
                 <div class="card-header">Table</div>
                 <div class="card-body">
+                    <form action="{{ route('Logs.getLogs') }}" method="post">
+
+                        @csrf
+                        <div class="row mb-4">
+
+                            <div class="col-sm-3">
+
+                                <label for="start">Start date:</label>
+
+
+                                <input id="startDate" type="date" value="2021-08-06" id="start" name="log-start">
+
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label for="end">End date:</label>
+                                <input id="endDate" type="date" value="2021-07-09" id="end" name="log-end">
+                            </div>
+
+                            <div class="col-sm-3">
+                                <input class="btn btn-primary" type="submit" value="get logs">
+
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label>Nr of Logs: {{ count($logss) }}</label>
+
+                            </div>
+
+
+
+
+
+
+                    </form>
+                </div>
+
+
+                <div class="row mb-4">
+                    <div class="col-sm-12">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-primary">
+                                <input type="radio" name="day" id="day"> day
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="week" id="week"> week
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="month" id="month"> month
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                <div class="row mb-4">
+                    <div id="activityDiv" class="col-sm-4 ">
+                        <div class="row">
+
+
+
+
+                            <div class="form-group">
+                                <label for="activityInput">Activity options</label>
+                                <input class="btn btn-primary " type="button" name="activityInput" id="activityInput"
+                                    type="submit" value="Add Activity">
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div id="activityRows">
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                    <div id="fixedDiv" class="col-sm-4 ">
+                        <div class="row">
+                            <div class="form-group ">
+                                <label for="fixedInput">Fixed options</label>
+                                <input class="btn btn-primary" type="button" name="fixedInput" id="fixedInput"
+                                    type="submit" value="Add Fixed">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="fixedRows">
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div id="scaledDiv" class="col-sm-4">
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="scaledInput">Scaled options</label>
+                                <input class="btn btn-primary float-sm-right" type="button" name="scaledInput"
+                                    id="scaledInput" type="submit" value="Add Scaled">
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="row">
+                            <div id="scaledRows">
+
+                            </div>
+                        </div>
+
+
+
+
+
+                    </div>
 
                 </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input id="make graph" class="btn btn-primary" type="button" value="make graph">
+                    </div>
+                </div>
+
+
+
+
+
             </div>
         </div>
+    </div>
 
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">Graph</div>
+            <div class="card-body">
+                <div id="canvasDiv">
+                    <canvas id="logsChart"></canvas>
+                </div>
 
+            </div>
         </div>
+    </div>
+
+
+
+
+    </div>
 
 
 

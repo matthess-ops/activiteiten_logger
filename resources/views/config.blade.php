@@ -32,11 +32,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav " style="font-size: 1.6em">
-                    <a class="nav-item nav-link active" href="{{ route('TimerData.readData') }}">Dashboard <span
-                            class="sr-only">(current)</span></a>
-                    <a class="nav-item nav-link" href="{{ route('ConfigData.index') }}">Config</a>
-                    <a class="nav-item nav-link" href="#">Diary</a>
-                    <a class="nav-item nav-link" href="#">Logs</a>
+                <a class="nav-item nav-link" href="{{ route('TimerData.readData') }}">Dashboard</a>          
+                <a class="nav-item nav-link  active" href="{{ route('ConfigData.index') }}">Config</a>
+                <a class="nav-item nav-link" href="{{ route('post.index') }}">Diary</a>
+                <a class="nav-item nav-link" href="{{ route('Logs.index') }}">Logs</a>
                 </div>
             </div>
         </div>

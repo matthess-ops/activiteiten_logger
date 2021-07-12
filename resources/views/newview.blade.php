@@ -29,13 +29,9 @@
         var timerRunning = @json($timerRunning);
         var logs = @json($todayLogs);
 
-
-     
-
-
     </script>
     {{-- dit hier laten als je dit verwijderd begint het dashboard te knipperen --}}
-    {{$timerRunning}} 
+    {{ $timerRunning }}
 
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary center">
@@ -51,7 +47,7 @@
                     <a class="nav-item nav-link active" href="{{ route('TimerData.readData') }}">Dashboard <span
                             class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link" href="{{ route('ConfigData.index') }}">Config</a>
-                    <a class="nav-item nav-link" href="#">Diary</a>
+                    <a class="nav-item nav-link" href="{{ route('post.index') }}">Diary</a>
                     <a class="nav-item nav-link" href="{{ route('Logs.index') }}">Logs</a>
                 </div>
             </div>
@@ -67,8 +63,8 @@
                 <div class="card-header">Timer</div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-4 bg-success">
-             
+                        <div class="col-sm-4">
+
 
 
 
@@ -99,7 +95,8 @@
                                         <select class="form-control" name="mainActivities" id="mainActivities">
                                             @foreach ($mainActivities as $mainActivity)
                                                 @if ($currentSelections['mainActivities'] == $mainActivity)
-                                                    <option value="{{ $mainActivity }}" selected>{{ $mainActivity }}
+                                                    <option value="{{ $mainActivity }}" selected>
+                                                        {{ $mainActivity }}
                                                     </option>
                                                 @else
                                                     <option value="{{ $mainActivity }}">{{ $mainActivity }}
@@ -247,12 +244,17 @@
                         </div>
 
 
-                        <div class="col-sm-8 bg-warning">
+                        <div class="col-sm-8 ">
+                        
                             <div class="table-responsive">
 
-                                <table class="table">
+                                <table class="table float-left ">
                                     <thead>
                                         <tr>
+                                         
+
+
+
                                             @foreach (array_keys($suggestions[0]) as $suggestion)
                                                 <th scope="col">{{ $suggestion }} </th>
 
@@ -262,9 +264,12 @@
                                     </thead>
 
                                     <tbody>
+
+
+
                                         @foreach ($suggestions as $suggestion)
-                                            <br>
                                             <tr>
+
                                                 @foreach (array_keys($suggestion) as $suggestionKey)
                                                     <td>{{ $suggestion[$suggestionKey] }}</td>
                                                 @endforeach
@@ -293,14 +298,11 @@
 
             </div>
 
-            {{-- {{ var_dump($startTimestamp) }}
-            {{ dd($__data) }} --}}
-
 
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-3">
         <div class="container-fluid" style="max-width: 1600px">
             <div class="row">
                 <div class="col-sm-6">
@@ -310,8 +312,12 @@
                             <form action="{{ route('Post.create') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
+                                    <label for="DiaryTitleInput">Titel</label>
+                                    <textarea class="form-control" name="DiaryTitleInput" id="DiaryTitleInput"
+                                        rows="1"></textarea>
                                     <label for="DiaryTextInput">Bericht</label>
-                                    <textarea class="form-control" name = "DiaryTextInput" id="DiaryTextInput" rows="8"></textarea>
+                                    <textarea class="form-control" name="DiaryTextInput" id="DiaryTextInput"
+                                        rows="8"></textarea>
                                     <input class="btn btn-primary" type="submit" value="opslaan">
 
 

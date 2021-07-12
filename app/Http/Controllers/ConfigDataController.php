@@ -18,49 +18,39 @@ class ConfigDataController extends Controller
         error_log("removeFixedGroupOrOption called");
 
         $formData = $request->all();
-        error_log(print_r( $formData,true));
-
-        $fixedGroup = array_keys($formData);
-
-
-        $fixedGroupValue = $formData[$fixedGroup[1]];
-        error_log("key value =".$fixedGroup[1]." ".$fixedGroupValue);
+        error_log(\json_encode($formData));
+        $arrayKeys = array_keys($formData);
+        $optionkey =str_replace("_"," ",$arrayKeys[2]) ;
+        $keyToRemove = str_replace("_"," ",$arrayKeys[1]);
+        $valueToRemove = str_replace("_"," ",$formData[$arrayKeys[1]]);
+        error_log("which option=".$optionkey."/ key to remove =".$keyToRemove."/ option to remove =".$valueToRemove );
 
         $timerData = TimerData::find(1);
         $column = $timerData->fixedOptions;
-
-        error_log(print_r( $column,true));
-
-    
-        if(array_key_exists("Remove_Group",$formData) == true){
-            // error_log("removeFixedGroupOrOption Remove_group key pressed");
-            unset($column[$fixedGroup[1]]);
-
+        if($optionkey == "Remove Group"){
+            error_log("remove group ".$keyToRemove);
+            unset($column[$keyToRemove]);
             $timerData->fixedOptions = $column;
             $timerData->save();
+
+
         }
-
-
-        if(array_key_exists("Remove_Option",$formData) == true){
-            // error_log("removeFixedGroupOrOption Remove_option key pressed");
-            $newValues =array();
-            // str replace is een rotzooi dit komt omdat de keys een underscore krijgen
-            // tijdens een post request, voortaan variabelen gebruiken die een underscore hebben
-            //voortaan alle keys met underscore doen en dan in frontend str_replace doen
-            foreach ($column[str_replace("_"," ",$fixedGroup[1])] as $option) {
-                if($option !=$fixedGroupValue){
-                    array_push($newValues,$option);
+        if($optionkey == "Remove Option"){
+            error_log("remove value ".$optionkey);
+            $keyValues = $column[$keyToRemove];
+            
+            $newKeyValues = [];
+            foreach ($keyValues as $keyValue) {
+                if($keyValue != $valueToRemove){
+                    array_push($newKeyValues,$keyValue);
                 }
             }
-            
-            $column[str_replace("_"," ",$fixedGroup[1])]= $newValues;
-            error_log(print_r( $column,true));
 
-
-
-
+            error_log(\json_encode($newKeyValues ));
+            $column[$keyToRemove] =  $newKeyValues;
             $timerData->fixedOptions = $column;
             $timerData->save();
+
         }
 
 
@@ -78,14 +68,12 @@ class ConfigDataController extends Controller
         $queryKey = array_keys($queryData)[0];
         $queryValue = $queryData[$queryKey];
 
-        error_log("KEY VALUE= ".$queryKey." ".$queryValue);
+        // // error_log("KEY VALUE= ".$queryKey." ".$queryValue);
 
 
         if(empty($queryValue) ){
-            error_log("storeScaled value empty");
 
         }else{
-            error_log("storeFixed value not empty");
             $timerData =TimerData::find(1);
             $scaledOptions =$timerData->scaledOptions;
             array_push($scaledOptions,$queryValue);
@@ -99,7 +87,9 @@ class ConfigDataController extends Controller
     }
 
     public function createNewFixed(Request $request){
+        error_log("createNewFixed called");
         $formData = $request->all();
+        // // error_log("create new fixed ",json_encode($formData));
         if(!empty($formData["fixedOptions"])){
             $fixedGroupName = $formData["fixedOptions"];
             $fixedGroupOptions =array_splice($formData,2);
@@ -111,7 +101,7 @@ class ConfigDataController extends Controller
                 }
             }
 
-            error_log(print_r( $newGroupOptions,true));
+            // // error_log(print_r( $newGroupOptions,true));
             $timerData =TimerData::find(1);
             $timerDataFixedOptions = $timerData->fixedOptions;
             $timerDataFixedOptions[$fixedGroupName] =$newGroupOptions;
@@ -135,27 +125,31 @@ class ConfigDataController extends Controller
 
 
     public function removeScaledOption(Request $request){
+        error_log("removeScaledOption called");
 
         $scaledOption = $request->input("scaledOptions");
       
-
-
-  
-       
         if(empty($scaledOption )){
-            error_log("removeScaledOption empty");
+            // error_log("removeScaledOption empty");
 
         }else{
-            error_log("removeScaledOption is not empty");
-            error_log($scaledOption);
+            // error_log("removeScaledOption is not empty");
+            // error_log($scaledOption);
 
             $timerData =TimerData::find(1);
-            $column = $timerData['scaledOptions'];
+            $scaledVars = $timerData['scaledOptions'];
+            $newScaledoptions = [];
+           foreach ($scaledVars as $scaledVar) {
+               if($scaledVar !=$scaledOption){
+                array_push($newScaledoptions,$scaledVar);
+               }
+           }
+            // error_log("old scaled vars ".json_encode($scaledVars));
+            // error_log("new scaled vars ".json_encode($newScaledoptions));
 
-            unset($column[array_search($scaledOption, $column)]);
-            error_log(print_r($column ,true));
+            // unset($column[array_search($scaledOption, $column)]);
 
-            $timerData->scaledOptions = $column;
+            $timerData->scaledOptions = $newScaledoptions;
             $timerData->save();
 
 
@@ -167,67 +161,70 @@ class ConfigDataController extends Controller
     }
 
     public function storeFixed(Request $request){
+        error_log("storeFixed called");
         $values = $request->all();
-        // error_log(print_r( $values,true));
+        error_log(json_encode($values));
        
 
-        error_log("values are");
-        error_log(print_r($values ,true));
+        // error_log("values are");
+        // error_log(print_r($values ,true));
 
-        $value = array_splice($values,1) ;
-        $valueKey = array_keys($value);
+        $keyValueOfInterest = array_splice($values,1);
+        $key = array_key_first($keyValueOfInterest);
+        $value = $keyValueOfInterest[$key];
+        $cleanKey = str_replace("_"," ",$key);
+
+        error_log($key." ".$value." ".$cleanKey);
+
      
 
-        if(empty($value[$valueKey[0]] )){
-            error_log("storeFixed empty");
+        if(empty($value)){
+            // error_log("storeFixed empty");
 
         }else{
-            error_log("storeFixed not empty".$valueKey[0]);
+            // error_log("storeFixed not empty".$valueKey[0]);
             $timerData =TimerData::find(1);
-            $cleanNewKey = str_replace("_"," ",$valueKey[0]);
 
             $column = $timerData['fixedOptions'];
-            error_log("lefuckddddddddddddddddd");
-            error_log(print_r($column ,true));
-            error_log(str_replace($valueKey[0],"_"," "));
-            $arrayOfInterest = $column[$cleanNewKey];
+         
+            $arrayOfInterest = $column[$cleanKey];
 
-            array_push($arrayOfInterest,$value[$valueKey[0]]);
+            array_push($arrayOfInterest,$value);
 
-            $column[$valueKey[0]] = $arrayOfInterest;
+            $column[$cleanKey] = $arrayOfInterest;
             $timerData->fixedOptions = $column;
             $timerData->save();
 
 
         }
-        error_log($value[$valueKey[0]] );
+        // error_log($value[$valueKey[0]] );
         return redirect()->route('ConfigData.index');
 
 
     }
 
     public function store(Request $request){
-        error_log("het doet");
+        error_log("store called");
         $values = $request->all();
         $value = array_splice($values,1) ;
         $valueKey = array_keys($value);
 
         
         if(empty($value[$valueKey[0]] )){
-            error_log("empty");
+            // error_log("empty");
 
         }else{
-            error_log("not empty");
+            // error_log("not empty");
             $timerData =TimerData::find(1);
             $arrayOfInterest = $timerData[$valueKey[0]];
             array_push($arrayOfInterest,$value[$valueKey[0]]);
             $timerData[$valueKey[0]] = $arrayOfInterest;
             $timerData->save();
-            error_log(print_r( $arrayOfInterest,true));
+            // error_log(print_r( $arrayOfInterest,true));
 
 
         }
-        error_log($value[$valueKey[0]] );
+        // error_log($value[$valueKey[0]] );
         return redirect()->route('ConfigData.index');
 
     }

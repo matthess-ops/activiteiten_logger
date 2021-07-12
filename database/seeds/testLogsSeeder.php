@@ -124,14 +124,13 @@ class testLogsSeeder extends Seeder
 
     public function run()
     {
-        $startTimestamp;
-        $currentTimestamp;
+    
 
-        $startTimestamp = Carbon::now()->timestamp;
+        $startTimestamp = Carbon::now()->subDays(14)->timestamp;
         $currentTimestamp =  $startTimestamp;
 
-        for ($log=0; $log < 500; $log++) { 
-            $randomLogTimeMin = rand(5,10);
+        for ($log=0; $log < 2500; $log++) { 
+            $randomLogTimeMin = rand(30,120);
             $logStartTimestamp = $currentTimestamp;
             $logEndTimestamp =  $currentTimestamp+($randomLogTimeMin*60);
             // error_log("start ". $currentTimestamp." end ".$logEndTimestamp." diff ".($logEndTimestamp-$currentTimestamp)/60);
