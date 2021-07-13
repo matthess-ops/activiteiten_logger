@@ -34801,13 +34801,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var chart_js_auto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! chart.js/auto */ "./node_modules/chart.js/auto/auto.esm.js");
 
+ // all js function used for Dashboard functionaltity
+//1: seperate functions belonging to timer and graphing of statistics to their own files
+//2: use jstest next time.
+// list of colors, might not be long enough if the used index is longer than its length
 
-var colorScheme = ["#25CCF7", "#FD7272", "#54a0ff", "#00d2d3", "#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#ecf0f1", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d", "#55efc4", "#81ecec", "#74b9ff", "#a29bfe", "#dfe6e9", "#00b894", "#00cec9", "#0984e3", "#6c5ce7", "#ffeaa7", "#fab1a0", "#ff7675", "#fd79a8", "#fdcb6e", "#e17055", "#d63031", "#feca57", "#5f27cd", "#54a0ff", "#01a3a4"];
+var colorScheme = ["#25CCF7", "#FD7272", "#54a0ff", "#00d2d3", "#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#ecf0f1", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d", "#55efc4", "#81ecec", "#74b9ff", "#a29bfe", "#dfe6e9", "#00b894", "#00cec9", "#0984e3", "#6c5ce7", "#ffeaa7", "#fab1a0", "#ff7675", "#fd79a8", "#fdcb6e", "#e17055", "#d63031", "#feca57", "#5f27cd", "#54a0ff", "#01a3a4"]; // convert data to chart.js format (label,data,backgroundcolor)
 
 var graphDatasets = function graphDatasets(data, dataOfInterest) {
-  // label: 'Low',
-  // data: [67.8],
-  // backgroundColor: '#D6E9C6',
   var datasets = [];
   data.forEach(function (dat, index) {
     var entry = {};
@@ -34817,7 +34818,8 @@ var graphDatasets = function graphDatasets(data, dataOfInterest) {
     datasets.push(entry);
   });
   return datasets;
-};
+}; // create the graph
+
 
 var makeGraph = function makeGraph(columns, labels) {
   var ctx = document.getElementById("chart");
@@ -34845,14 +34847,19 @@ var makeGraph = function makeGraph(columns, labels) {
       }
     }
   });
-};
+}; // calculate from the logs the total time in minutes worked for each found sub Activity for each
+// found main Activity. e.g werken mainActivity has 8 logs with that mainActivity. 5 of these logs has the same subActivity (programmeren),
+// the other 3 has another subActivity (onderzoek). Then all the log time for both subActivities are summed.
+
 
 var makeStatisticGraph = function makeStatisticGraph() {
+  // function that calculates for each mainActivity for all subActivities the total time
   var calcSubMainActivitiesTime = function calcSubMainActivitiesTime(mainActivities, subActivities) {
     var labels = mainActivities;
     var data = [];
     subActivities.forEach(function (subActivity) {
-      var allMins = [];
+      var allMins = []; // only total mins is used hower allCounts andor averageMinPerLog can be used also in the future
+
       var allCounts = [];
       var averageMinPerLog = [];
       mainActivities.forEach(function (mainActivity) {
@@ -34884,7 +34891,8 @@ var makeStatisticGraph = function makeStatisticGraph() {
       });
     });
     return [data, labels];
-  };
+  }; // retrieve for all logs the unique main/ sub Activity names
+
 
   var getAllColumnValues = function getAllColumnValues(columnName) {
     var allValues = [];
@@ -34894,20 +34902,19 @@ var makeStatisticGraph = function makeStatisticGraph() {
     });
     var singles = Array.from(new Set(allValues));
     return singles;
-  };
+  }; // not all mainActivities/subActivities will be done each day. Therefore
+  // it makes no sense to graph all these combinations. Therefore first retrieve
+  // all used mainActivities and subActivties.
 
-  var logsMainActivities = getAllColumnValues("mainActivities"); // console.log("main activities")
-  // console.log(logsMainActivities.length)
 
+  var logsMainActivities = getAllColumnValues("mainActivities");
   var logsSubActivities = getAllColumnValues("subActivities");
   var data = calcSubMainActivitiesTime(logsMainActivities, logsSubActivities);
   var mainSubActColumns = graphDatasets(data[0], "totalMins");
   makeGraph(mainSubActColumns, data[1]);
-  console.log("logsss input");
-  console.log(logs);
 };
 
-makeStatisticGraph();
+makeStatisticGraph(); // function that updates the timer.
 
 var timer = function timer() {
   if (timerRunning == true) {
@@ -34921,12 +34928,14 @@ var timer = function timer() {
       var minsString = "";
 
       if (hours < 10) {
+        // check if the current hour is single or double digit
         hoursString = "0" + hours.toString();
       } else {
         hoursString = hours.toString();
       }
 
       if (mins < 10) {
+        // check if the current min is single or double digit
         minsString = "0" + mins.toString();
       } else {
         minsString = mins.toString();

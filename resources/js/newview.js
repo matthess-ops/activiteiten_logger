@@ -1,7 +1,11 @@
 import moment from 'moment';
 import Chart from "chart.js/auto";
 
+// all js function used for Dashboard functionaltity
+//1: seperate functions belonging to timer and graphing of statistics to their own files
+//2: use jstest next time.
 
+// list of colors, might not be long enough if the used index is longer than its length
 const colorScheme = [
     "#25CCF7",
     "#FD7272",
@@ -49,10 +53,9 @@ const colorScheme = [
     "#01a3a4",
 ];
 
+// convert data to chart.js format (label,data,backgroundcolor)
 const graphDatasets = (data, dataOfInterest) => {
-    // label: 'Low',
-    // data: [67.8],
-    // backgroundColor: '#D6E9C6',
+
     let datasets = []
     data.forEach((dat, index) => {
         let entry = {}
@@ -60,14 +63,11 @@ const graphDatasets = (data, dataOfInterest) => {
         entry["data"] = dat[dataOfInterest]
         entry['backgroundColor'] = colorScheme[index]
         datasets.push(entry)
-
-
-
     });
     return datasets
 }
 
-
+// create the graph
 const makeGraph = (columns, labels) => {
     var ctx = document.getElementById("chart");
 
@@ -103,13 +103,18 @@ const makeGraph = (columns, labels) => {
 
 }
 
+
+// calculate from the logs the total time in minutes worked for each found sub Activity for each
+// found main Activity. e.g werken mainActivity has 8 logs with that mainActivity. 5 of these logs has the same subActivity (programmeren),
+// the other 3 has another subActivity (onderzoek). Then all the log time for both subActivities are summed.
 const makeStatisticGraph = () => {
 
+    // function that calculates for each mainActivity for all subActivities the total time
     const calcSubMainActivitiesTime = (mainActivities, subActivities) => {
         const labels = mainActivities;
         const data = []
         subActivities.forEach(subActivity => {
-            let allMins = []
+            let allMins = [] // only total mins is used hower allCounts andor averageMinPerLog can be used also in the future
             let allCounts = []
             let averageMinPerLog = []
             mainActivities.forEach(mainActivity => {
@@ -147,6 +152,7 @@ const makeStatisticGraph = () => {
         return [data, labels]
     }
 
+    // retrieve for all logs the unique main/ sub Activity names
     const getAllColumnValues = (columnName) => {
         let allValues = []
         logs.forEach(log => {
@@ -158,22 +164,27 @@ const makeStatisticGraph = () => {
         return singles
     }
 
+    // not all mainActivities/subActivities will be done each day. Therefore
+    // it makes no sense to graph all these combinations. Therefore first retrieve
+    // all used mainActivities and subActivties.
     const logsMainActivities = getAllColumnValues("mainActivities")
-        // console.log("main activities")
-        // console.log(logsMainActivities.length)
+
     const logsSubActivities = getAllColumnValues("subActivities")
     const data = calcSubMainActivitiesTime(logsMainActivities, logsSubActivities)
 
     const mainSubActColumns = graphDatasets(data[0], "totalMins")
     makeGraph(mainSubActColumns, data[1])
 
-    console.log("logsss input")
-    console.log(logs)
+
 
 
 
 }
+
+
 makeStatisticGraph()
+
+// function that updates the timer.
 
 const timer = () => {
 
@@ -190,14 +201,14 @@ const timer = () => {
 
             var hoursString = ""
             var minsString = ""
-            if (hours < 10) {
+            if (hours < 10) { // check if the current hour is single or double digit
                 hoursString = "0" + hours.toString()
             } else {
                 hoursString = hours.toString()
 
             }
 
-            if (mins < 10) {
+            if (mins < 10) { // check if the current min is single or double digit
                 minsString = "0" + mins.toString()
             } else {
                 minsString = mins.toString()

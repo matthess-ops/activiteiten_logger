@@ -5,29 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 
+//updates next version
+// 1: refactoring
+// 2: validate all data and prompt user with alert messages when needed use ->withInput method to do this
+// 3: returning view() or redirect distinction. Only use views for get request and redirects for post request.
+// 4: rename all the function to better reflect their function
+// 5: replace variable whitespace with underscores.
+
 class PostsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
+ 
+    // creates the pagination restults for the posts
+    //1: change function name to a better name
     public function testData(){
 
         $postData = Post::orderBy('id', 'DESC')->paginate(8);
         return view('posts',compact('postData'));
     }
 
+    // saves the edited post message of deletes the post message.
+    //1: also include title change.
     public function saveDelete(Request $request){
 
-        error_log("waarom doe tie itsids");
         $saveOrDelete = $request->all();
-        error_log($request->id);
 
         $id = $request->input('id');
 
@@ -40,8 +41,6 @@ class PostsController extends Controller
                 $post = Post::find($id);
                 $post["post"] = $request->input('post_text');
                 $post->save();
-
-                // Post::find($id) ->post = "new";
                 break;
             
             default:
@@ -51,11 +50,7 @@ class PostsController extends Controller
         $postData = Post::paginate(8);
         return view('posts',compact('postData'));    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // create a new post message
     public function create(Request $request)
     {
         $postText = $request->input('DiaryTextInput');
@@ -70,59 +65,5 @@ class PostsController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+  
 }

@@ -1,27 +1,34 @@
-import { filter } from 'lodash';
+// make test here, because alot of calculations are done here.
+// additional function for now only row options can be added, they cannot be removed
+
 import moment from 'moment';
 import Chart from "chart.js/auto";
-import { data } from 'jquery';
 
 
-const { invalid } = require("moment");
 
+
+// retrieve all blade data for the Activities
 let mainActivities = timerData["mainActivities"];
 let subActivities = timerData["subActivities"];
 let fixedOptions = timerData["fixedOptions"];
 let scaledOptions = timerData["scaledOptions"];
 let logs = logss;
 
+// the subActivities will have a total function, meaning that all values of the subActivities are totalled for the mainActivity
 subActivities.push("total")
 
-const logCount = "log count";
-const totalTime = "total time";
-const timePerLog = "time per log";
-const averageTimePerDay = "daily ave time";
-const averageLogCountPerDay = "daily ave logcount";
-const averageTimePerWeek = "weekly ave time";
-const averageLogCountPerWeek = "weekly ave logcount";
+const logCount = "log count"; // nr of logs that has one or more of the needed values e.g mainActivity= "werken", subActivity="programmeren"
+const totalTime = "total time"; // the total time of all the logs of the needed values e.g mainActivity= "werken", subActivity="programmeren"
+const timePerLog = "time per log"; // the average time per log of the needed values e.g mainActivity= "werken", subActivity="programmeren"
+const averageTimePerDay = "daily ave time"; // is the total time divided by 5 days
+const averageLogCountPerDay = "daily ave logcount"; // log count divided by 5 days
+const averageTimePerWeek = "weekly ave time"; //total time dividied by 4 weeks
+const averageLogCountPerWeek = "weekly ave logcount"; // log count divided by 4 weeks
 
+
+// all the different calculations that are possible for the different output options.
+// to determine which outputs are possible is dependant on the timeInterval, e.g it is not
+// possible to calculate the averageTimePerWeek if only the logs of one day are selected.
 const activitiesOutputOptions = {
     day: [logCount, totalTime, timePerLog],
     week: [
@@ -45,34 +52,29 @@ const activitiesOutputOptions = {
 let timeInterval = "day";
 let headers;
 
-
-// // console.log("logs are ", logs)
-
-
+// clearing of the rows output
 const clearRows = () => {
 
-    document.getElementById("activityRows").textContent = "";
-    document.getElementById("fixedRows").textContent = "";
-    document.getElementById("scaledRows").textContent = "";
+        document.getElementById("activityRows").textContent = "";
+        document.getElementById("fixedRows").textContent = "";
+        document.getElementById("scaledRows").textContent = "";
 
-}
-
+    }
+    // get the timerInterval
+    // 1: remove duplicated code
 const getTimeInterval = () => {
 
 
     document.getElementById("day").addEventListener("click", event => {
-        // // console.log("day", event.target.value)
         timeInterval = "day";
         clearRows()
     });
     document.getElementById("week").addEventListener("click", event => {
-        // // console.log("week", event.target.value)
         timeInterval = "week";
         clearRows()
 
     });
     document.getElementById("month").addEventListener("click", event => {
-        // // console.log("month", event.target.value)
         timeInterval = "month";
         clearRows()
 
@@ -81,9 +83,8 @@ const getTimeInterval = () => {
 
 getTimeInterval();
 
-// console.log("logs are ", logs);
-// console.log("timerdata are ", mainActivities);
 
+//create select and options
 const createSelection = (selectionId, selectOptions) => {
     let select = document.createElement("select");
     select.id = selectionId;
@@ -97,6 +98,10 @@ const createSelection = (selectionId, selectOptions) => {
     return select;
 };
 
+//creates the mainActivities options select row
+// consists of the following select mainActivity select
+// subActivity select and output select containing either day,week, month output options
+//1: the timerInterval if statements are duplicated uncessary 3 times in other functions.
 const createActivitiesRow = () => {
     let mainDiv = document.createElement("div");
     mainDiv.classList.add("rowDiv")
@@ -128,7 +133,9 @@ const createActivitiesRow = () => {
     div.appendChild(mainDiv);
 };
 
-
+//creates the fixed options select row.
+// consists of the following select fixedOptions select, mainActivity select
+// subActivity select and output select containing either day,week, month output options
 const createFixedRow = () => {
     let mainDiv = document.createElement("div");
     mainDiv.classList.add("rowDiv")
@@ -165,7 +172,9 @@ const createFixedRow = () => {
 
 }
 
-
+//creates the scaled options select row.
+// consists of the following select scaled select, mainActivity select
+// subActivity select and output select containing either day,week, month output options
 const createScaledRow = () => {
     let mainDiv = document.createElement("div");
     mainDiv.classList.add("rowDiv")
@@ -195,50 +204,39 @@ const createScaledRow = () => {
 
 document.getElementById("activityInput").addEventListener("click", event => {
     createActivitiesRow();
-    // // console.log("le fuck")
 });
 
 
 document.getElementById("fixedInput").addEventListener("click", event => {
     createFixedRow();
-    // // console.log("le fuck")
 });
 
 document.getElementById("scaledInput").addEventListener("click", event => {
     createScaledRow();
-    // // console.log("le fuck")
 });
 
-
+//gets the values of selects of the created rows (activitiesRow,scaledRow, fixedRow)
 const getChildElements = (rowName) => {
 
     let options = []
-    const kak = document.getElementById(rowName).childNodes
-        // console.log("---------------- ", kak)
+    const rowChilds = document.getElementById(rowName).childNodes
 
-    kak.forEach(element => {
-        const kut = element.childNodes
+    rowChilds.forEach(element => {
+        const rowChildsElements = element.childNodes //does not only consists of select but also text, these need to be filterd out
         let row = []
-        console.log("kut meuk ", kut)
-        kut.forEach(tering => {
-            if (tering.tagName == "SELECT") {
-                row[tering.id] = tering.value
+        rowChildsElements.forEach(rowChildElement => {
+            if (rowChildElement.tagName == "SELECT") {
+                row[rowChildElement.id] = rowChildElement.value
 
             }
         });
-        // console.log("row meuk ", row)
         if (Object.keys(row).length != 0) {
             options.push(row)
 
         }
 
-        // console.log("row lenght ", Object.keys(row).length, row)
-
-
-
     });
-    // console.log("foun optionds ", options)
-    // options.shift()
+
     return options
 
 }
@@ -246,7 +244,7 @@ const getChildElements = (rowName) => {
 
 
 
-
+// collections of all the different rows and its options
 const getRowData = () => {
 
     let rowOptions = {
@@ -267,107 +265,90 @@ const getRowData = () => {
 
 
 
-
-
-//1: bepaal startdate van eerste en laatste log, aan de hand van day,week,month timeinterval
-// genereer de benodigde columnheader
+// gets the x axis headers. For timeInterval "day" this should be in dates 21-11-21
+// for timerInterval "week" this is the weeknr. For timeInterval "month" is the month name
+//1: alot of duplicated code, break out in a seperate function
 const getColumnHeaders = () => {
-    console.log("get headers test ", logs[0]);
-    // // // console.log("timerineterval ", timeInterval)
-    // moment(document.getElementById("end").value, "YYYY-MM-DD");
-    const startDate = moment(dates["startDate"], "YYYY-MM-DD");
-    const endDate = moment(dates["endDate"], "YYYY-MM-DD");
-    // const diff = endDate.subtract(startDate)
-    const columnHeaders = []
-    if (timeInterval == "day") {
-        const diffInDays = endDate.diff(startDate, "days");
-        // console.log("diff in days ", diffInDays)
-        for (let index = 0; index < diffInDays; index++) {
-            // const element = diffInDays;
-            const startNewDate = startDate.clone().add(index, "day")
-            const endNewDate = startDate.clone().add(index + 1, "day")
-            const startNewDateUnix = startNewDate.unix()
-            const experiment = ""
-            for (let index = 0; index < logs.length; index++) {
-                const temp = logs[index];
-                if (temp.log.startTimestamp > startNewDateUnix) {
-                    experiment = temp.log.experiments
-                    break
+
+        const startDate = moment(dates["startDate"], "YYYY-MM-DD");
+        const endDate = moment(dates["endDate"], "YYYY-MM-DD");
+        const columnHeaders = []
+        if (timeInterval == "day") {
+            const diffInDays = endDate.diff(startDate, "days");
+            for (let index = 0; index < diffInDays; index++) {
+                const startNewDate = startDate.clone().add(index, "day")
+                const endNewDate = startDate.clone().add(index + 1, "day")
+                const startNewDateUnix = startNewDate.unix()
+                const experiment = ""
+                for (let index = 0; index < logs.length; index++) {
+                    const temp = logs[index];
+                    if (temp.log.startTimestamp > startNewDateUnix) {
+                        experiment = temp.log.experiments
+                        break
+                    }
+
                 }
 
+
+                const newAdd = { "experiment": experiment, "startDate": startNewDate, "endDate": endNewDate, "columnHeader": startNewDate.format("DD-MM-YYYY"), "startDateStr": startNewDate.format("DD-MM-YYYY") }
+                columnHeaders.push(newAdd)
+            }
+
+        }
+        if (timeInterval == "week") {
+
+            const diffInWeeks = endDate.diff(startDate, "week");
+            for (let index = 0; index < diffInWeeks; index++) {
+                const startNewDate = startDate.clone().add(index, "week")
+                const endNewDate = startDate.clone().add(index + 1, "week")
+                const startNewDateUnix = startNewDate.unix()
+                const experiment = ""
+                for (let index = 0; index < logs.length; index++) {
+                    const temp = logs[index];
+                    if (temp.log.startTimestamp > startNewDateUnix) {
+                        experiment = temp.log.experiments
+                        break
+                    }
+
+                }
+
+                const newAdd = { "experiment": experiment, "startDate": startNewDate, "endDate": endNewDate, "columnHeader": startNewDate.isoWeek(), "startDateStr": startNewDate.format("DD-MM-YYYY") }
+                columnHeaders.push(newAdd)
             }
 
 
-            const newAdd = { "experiment": experiment, "startDate": startNewDate, "endDate": endNewDate, "columnHeader": startNewDate.format("DD-MM-YYYY"), "startDateStr": startNewDate.format("DD-MM-YYYY") }
-            columnHeaders.push(newAdd)
         }
+        if (timeInterval == "month") {
+            const diffInMonths = endDate.diff(startDate, "month");
+            // // console.log("diff in month ", diffInMonths)
+            for (let index = 0; index < diffInMonths; index++) {
+                const startNewDate = startDate.clone().add(index, "month")
+                const endNewDate = startDate.clone().add(index + 1, "month")
+                const startNewDateUnix = startNewDate.unix()
+                const experiment = ""
+                for (let index = 0; index < logs.length; index++) {
+                    const temp = logs[index];
+                    if (temp.log.startTimestamp > startNewDateUnix) {
+                        experiment = temp.log.experiments
+                        break
+                    }
 
-        // // // console.log("day headers", columnHeaders)
-    }
-    if (timeInterval == "week") {
-
-        const diffInWeeks = endDate.diff(startDate, "week");
-        // // console.log("diff in week ", diffInWeeks)
-        for (let index = 0; index < diffInWeeks; index++) {
-            // const element = diffInDays;
-            const startNewDate = startDate.clone().add(index, "week")
-            const endNewDate = startDate.clone().add(index + 1, "week")
-            const startNewDateUnix = startNewDate.unix()
-            const experiment = ""
-            for (let index = 0; index < logs.length; index++) {
-                const temp = logs[index];
-                if (temp.log.startTimestamp > startNewDateUnix) {
-                    experiment = temp.log.experiments
-                    break
                 }
-
+                const newAdd = { "experiment": experiment, "startDate": startNewDate, "endDate": endNewDate, "columnHeader": startNewDate.format('MMMM'), "startDateStr": startNewDate.format("DD-MM-YYYY") }
+                columnHeaders.push(newAdd)
             }
-
-            const newAdd = { "experiment": experiment, "startDate": startNewDate, "endDate": endNewDate, "columnHeader": startNewDate.isoWeek(), "startDateStr": startNewDate.format("DD-MM-YYYY") }
-            columnHeaders.push(newAdd)
         }
-        // // console.log("week is ", columnHeaders)
 
 
+
+        headers = columnHeaders;
     }
-    if (timeInterval == "month") {
-        const diffInMonths = endDate.diff(startDate, "month");
-        // // console.log("diff in month ", diffInMonths)
-        for (let index = 0; index < diffInMonths; index++) {
-            // const element = diffInDays;
-            const startNewDate = startDate.clone().add(index, "month")
-            const endNewDate = startDate.clone().add(index + 1, "month")
-            const startNewDateUnix = startNewDate.unix()
-            const experiment = ""
-            for (let index = 0; index < logs.length; index++) {
-                const temp = logs[index];
-                if (temp.log.startTimestamp > startNewDateUnix) {
-                    experiment = temp.log.experiments
-                    break
-                }
-
-            }
-            const newAdd = { "experiment": experiment, "startDate": startNewDate, "endDate": endNewDate, "columnHeader": startNewDate.format('MMMM'), "startDateStr": startNewDate.format("DD-MM-YYYY") }
-            columnHeaders.push(newAdd)
-        }
-        // // console.log("month is ", columnHeaders)
-    }
-    // // console.log(dates, startDate, endDate)
-    // // console.log("startdate ", startDate)
-    // // console.log("enddate ", endDate)
-    // let headers = []
-
-
-    headers = columnHeaders;
-}
-
+    // groups the logs per header date.
 const divideLogs = () => {
     let newLogs = []
     headers.forEach(header => {
         let tempLogs = []
-            // // console.log(header)
         logs.forEach(log => {
-            // // console.log("lets go ", log.startTimestamp, header.startDate);
 
             if (
                 moment.unix(log["log"].startTimestamp).isSameOrAfter(header.startDate) &&
@@ -379,29 +360,15 @@ const divideLogs = () => {
         newLogs.push(tempLogs)
     });
 
-    // // console.log("thse are the filtered logs ", newLogs);
 
     return newLogs
-
-
 
 }
 
 
-// const logCount = "log count";
-// const totalTime = "total time";
-// const timePerLog = "time per log";
-// const averageTimePerDay = "daily ave time";
-// const averageLogCountPerDay = "daily ave logcount";
-// const averageTimePerWeek = "weekly ave time";
-// const averageLogCountPerWeek = "weekly ave logcount";
 
-
-
-
-
+// function used to calculate the provided option for a group of logs.
 const allCalculations = (filteredLogs, option) => {
-    // console.log("launch deze meuk")
     const logCountValue = filteredLogs.length
     let totalTimeValue = 0
     let timePerLogValue = 0
@@ -463,91 +430,88 @@ const allCalculations = (filteredLogs, option) => {
 }
 
 
-
+// filter for the date log groups for the needed main and sub activity.
+// followed by calculating for each filter date log group the needed output (totalMin, log count etc).
+//1: again quite alot of code duplication between this function and calculateFixedRowData() and calculateScaledRowData()
 const calculateActivitiesRowData = (inputLogs, rowOptions) => {
-    // console.log("werkt dit")
-    let rowColumn = []
-    rowOptions.forEach(rowOption => {
-        // console.log("beh")
-        let cellValues = []
-        inputLogs.forEach(inputLogSet => {
-            // console.log("bah")
-            let filterLogs = []
-            if (rowOption["subActivities"] == "total") {
-                filterLogs = inputLogSet.filter(
-                    (testLog) =>
-                    testLog["mainActivities"] == rowOption["mainActivities"]
-
-                );
-            } else {
-                filterLogs = inputLogSet.filter(
-                    (testLog) =>
-                    testLog["mainActivities"] == rowOption["mainActivities"] &&
-                    testLog["subActivities"] == rowOption["subActivities"]
-                );
-            }
-
-            // console.log("filter logs ", filterLogs)
-            const cellValue = allCalculations(filterLogs, rowOption["output"])
-            cellValues.push(cellValue)
-
-
-        });
-        // console.log("result ", rowOption, cellValues)
-        rowColumn.push({ "rowOption": rowOption, "cellValues": cellValues })
-    });
-
-    return rowColumn
-}
-
-const calculateFixedRowData = (inputLogs, rowOptions) => {
-    let rowColumn = []
-    rowOptions.forEach(rowOption => {
-
-        const subOptions = fixedOptions[rowOption["fixedOptions"]]
-        subOptions.forEach(subOption => {
-
-
+        let rowColumn = []
+        rowOptions.forEach(rowOption => {
             let cellValues = []
             inputLogs.forEach(inputLogSet => {
-                // console.log("bah")
                 let filterLogs = []
-                if (rowOption["subActivities"] == "total") {
+                if (rowOption["subActivities"] == "total") { // total means that all logs containing the mainActivity are needed for the calculation. The result is the sum of all subActivities
                     filterLogs = inputLogSet.filter(
                         (testLog) =>
                         testLog["mainActivities"] == rowOption["mainActivities"]
 
                     );
                 } else {
-                    filterLogs = inputLogSet.filter(
+                    filterLogs = inputLogSet.filter( // is not total, thus the array should be filtered for logs of a particular main and sub activity
                         (testLog) =>
                         testLog["mainActivities"] == rowOption["mainActivities"] &&
                         testLog["subActivities"] == rowOption["subActivities"]
                     );
                 }
 
-                filterLogs = filterLogs.filter((testLog) =>
-                    testLog[rowOption["fixedOptions"]] == subOption
-
-                )
-
-                // console.log("filter logs ", filterLogs)
-                const cellValue = allCalculations(filterLogs, rowOption["output"])
+                const cellValue = allCalculations(filterLogs, rowOption["output"]) // do the calculatuion
                 cellValues.push(cellValue)
 
 
             });
-            // console.log("result ", rowOption, cellValues)
-            rowColumn.push({ "rowOption": rowOption, "cellValues": cellValues, "fixedSuboption": subOption })
+            rowColumn.push({ "rowOption": rowOption, "cellValues": cellValues })
         });
 
-    });
+        return rowColumn
+    }
+    //the same af with calculateActivitiesRowData() above. Only for each of the fixed options of the fixed Activity 
+    // a seperate group is created. E.g fixedActivity = houding / fixedOptions = zitten,staan,liggen. The logs are
+    // filtered for total, main and sub activity. And also filter for zitten,staan and liggen. Thus the result is 3 datasets, one for zitten,staan and liggen
+const calculateFixedRowData = (inputLogs, rowOptions) => {
+        let rowColumn = []
+        rowOptions.forEach(rowOption => {
 
-    return rowColumn
-        // console.log(rowColumn)
+            const subOptions = fixedOptions[rowOption["fixedOptions"]]
+            subOptions.forEach(subOption => { // these subOptions are zitten,staan and liggen
 
-}
 
+                let cellValues = []
+                inputLogs.forEach(inputLogSet => {
+                    let filterLogs = []
+                    if (rowOption["subActivities"] == "total") {
+                        filterLogs = inputLogSet.filter(
+                            (testLog) =>
+                            testLog["mainActivities"] == rowOption["mainActivities"]
+
+                        );
+                    } else {
+                        filterLogs = inputLogSet.filter(
+                            (testLog) =>
+                            testLog["mainActivities"] == rowOption["mainActivities"] &&
+                            testLog["subActivities"] == rowOption["subActivities"]
+                        );
+                    }
+
+                    filterLogs = filterLogs.filter((testLog) =>
+                        testLog[rowOption["fixedOptions"]] == subOption
+
+                    )
+
+                    const cellValue = allCalculations(filterLogs, rowOption["output"])
+                    cellValues.push(cellValue)
+
+
+                });
+                rowColumn.push({ "rowOption": rowOption, "cellValues": cellValues, "fixedSuboption": subOption }) //fixedSuboption is specfici for fixed rows, you need this value because if will become part or the line legend. e.g houding -> zitten-> werken -> programmenen - total time
+            });
+
+        });
+
+        return rowColumn
+            // console.log(rowColumn)
+
+    }
+    //
+    //scaled Activities only have one option, which is the average level of all the logs in the group. E.g pijn level average = 5;
 
 const allScaledCalculations = (filteredLogs, option) => {
     let totalScore = 0
@@ -562,10 +526,13 @@ const allScaledCalculations = (filteredLogs, option) => {
         totalScore += (diff * filteredLog[option])
     });
 
-    return Math.round(totalScore / totalMins)
+    return Math.round(totalScore / totalMins) // the average level per minute is calculated and returend
 
 }
 
+
+
+//the same af with calculateActivitiesRowData() above.
 const calculateScaledRowData = (inputLogs, rowOptions) => {
     let rowColumn = []
     rowOptions.forEach(rowOption => {
@@ -601,14 +568,7 @@ const calculateScaledRowData = (inputLogs, rowOptions) => {
 }
 
 
-
-
-
-
-
-
-
-
+// might not contain enought colours if to many row options are put in one graph
 const colorScheme = [
     "#25CCF7",
     "#FD7272",
@@ -656,18 +616,15 @@ const colorScheme = [
     "#01a3a4",
 ];
 
-// var myLineChart = new Chart(ctx, config);
 
-
+// create the graph. Each line in the graph is the calculated results for one of the row options
 const graph = (data) => {
 
-    document.getElementById("logsChart").remove()
+    document.getElementById("logsChart").remove() // remove the previous chart/canvas, because chartjs prevent overriding previouly made charts
 
     let newCanvas = document.createElement('canvas');
     newCanvas.id = "logsChart"
-        // console.log(newCanvas)
-    document.getElementById("canvasDiv").appendChild(newCanvas)
-        // canvas.appendChild(newCanvas)
+    document.getElementById("canvasDiv").appendChild(newCanvas) // create a new canvas
 
     const test = new Chart(document.getElementById("logsChart"), {
         type: 'line',
@@ -675,7 +632,7 @@ const graph = (data) => {
         options: {
             title: {
                 display: true,
-                text: 'World population per region (in millions)'
+                text: 'Activities'
             },
             scales: {
                 y: {
@@ -683,7 +640,7 @@ const graph = (data) => {
                     display: true,
                     position: 'left',
                 },
-                y1: {
+                y1: { // second y axis is needed because total time can be several 100's of minutes while the average pijn level is allways between 0-10. And log count is normally a small value.  Which therefore it becomes difficult to see the change of the average pijn level and log count
                     type: 'linear',
                     display: true,
                     position: 'right',
@@ -700,13 +657,18 @@ const graph = (data) => {
     test.update()
 }
 
+// converts the calculated data for the activities, fixed activities and scaledActivities 
+// to the chartjs format.
+//1:  Since a user can change experiments a few times a week. Not all the logs in a date group may represent the first log experiment.
+// however this only really a big problem for monthly date groups.
+//2: remove duplicated code 
+
 const createDataSets = (actData, fixedData, scaledData) => {
     let colourCount = 0
-    console.log("fucking go")
     console.log(fixedData)
     let data = {}
     data["labels"] = headers.map(function(header) {
-        return header.columnHeader + " " + header.experiment
+        return header.columnHeader + " " + header.experiment // concatenate header (date,week nr or month name) with the experiment.
     })
     let datasets = []
     actData.forEach((actDat, index) => {
@@ -739,7 +701,6 @@ const createDataSets = (actData, fixedData, scaledData) => {
             dataset.yAxisID = "y"
 
         }
-        // yAxisID: 'y1',
 
         colourCount += 1
         datasets.push(dataset)
@@ -751,9 +712,8 @@ const createDataSets = (actData, fixedData, scaledData) => {
         dataset["data"] = scaledDat.cellValues
         dataset["backgroundColor"] = colorScheme[index]
         dataset.borderColor = colorScheme[index]
-        dataset.yAxisID = "y1"
+        dataset.yAxisID = "y1" // since scaled data goes from 0 -10 it allways needs to be put on the y1 axis.
 
-        // yAxisID: 'y1',
 
         colourCount += 1
         datasets.push(dataset)
@@ -762,27 +722,25 @@ const createDataSets = (actData, fixedData, scaledData) => {
 
 
     data["datasets"] = datasets
-    console.log(headers)
-    console.log(data)
+        // console.log(headers)
+        // console.log(data)
     graph(data)
 
 }
 
 
-///// input that makes the graph
+// is main of making the graph
 document.getElementById("make graph").addEventListener("click", event => {
-    getColumnHeaders()
-    console.log("header zijn ", headers)
-    const seperatedLogs = divideLogs()
-    console.log("seperated logs ", seperatedLogs)
-    const rowOptions = getRowData()
-    console.log("row data", rowOptions)
+    getColumnHeaders() // creates the date ranges dependent on the timeInterval
+    const seperatedLogs = divideLogs() // divides the logs over the date ranges.
+    const rowOptions = getRowData() // get the selected options of the mainActivities, fixed and scaled Activities .
+        // console.log("row data", rowOptions)
     const actData = calculateActivitiesRowData(seperatedLogs, rowOptions["activityOptions"])
 
     const fixedData = calculateFixedRowData(seperatedLogs, rowOptions["fixedOptions"])
 
     const scaledData = calculateScaledRowData(seperatedLogs, rowOptions["scaledOptions"])
-    createDataSets(actData, fixedData, scaledData)
+    createDataSets(actData, fixedData, scaledData) // convertsthe calculated data to graph format data 
     console.log("scaledData")
     console.log(scaledData)
     console.log("fixedData")
@@ -791,6 +749,8 @@ document.getElementById("make graph").addEventListener("click", event => {
     console.log(actData)
 })
 
+
+// changes the start date and end date of the calender date picker today and tomorrow
 const changeStartEndDate = () => {
 
     const startDate = document.getElementById("startDate")
@@ -801,7 +761,3 @@ const changeStartEndDate = () => {
 }
 
 changeStartEndDate()
-
-// mainActivities: "rusten"
-// output: "total time"
-// subActivities: "total

@@ -11,6 +11,9 @@ use Carbon\Carbon;
 // 1: refactoring
 // 2: validate all data and prompt user with alert messages when needed use ->withInput method to do this
 // 3: returning view() or redirect distinction. Only use views for get request and redirects for post request.
+// 4: rename all the function to better reflect their function
+// 5: replace variable whitespace with underscores.
+
 class TimerDataController extends Controller
 {
     // get the logs of today, needed to create the statics bar graph in dashboard
@@ -78,12 +81,12 @@ class TimerDataController extends Controller
         return view('newview', $timerData, $startTime); 
     }
 
+    //update the the current selected options with the entered selections
     public function updateSelection(Request $request)
     {
         $values = $request->all();
 
         $data = $values["suggestion"];
-        // error_log("suggestion is " . $data);
 
         $dataJson = json_decode($data, TRUE);
 
@@ -97,10 +100,13 @@ class TimerDataController extends Controller
 
   
 
+    //If the timer is running and the stop button is pressed, the previouslog 
+    //in the database is retrieved and updated with the end and start time. If the
+    //timer is not running the selected values are saved as previouslog.
 
+    //1: Replace all white spaces in variables with underscore. 
     public function startTimer(Request $request)
     {
-        error_log("start timer values are");
         $data = $request->all();
         $values = array_splice($data, 1);
 
@@ -117,8 +123,7 @@ class TimerDataController extends Controller
 
         //to create previouslog add to $newa
         if ($timerData->timerRunning == true) {
-            error_log("timer is running");
-            // should create a log because timer should not be running
+            // create a new log because timer is running and switch timerRunning  var to False
             $timerData->timerRunning    =  false;
             $timerData->save();
 
@@ -131,27 +136,14 @@ class TimerDataController extends Controller
             $log->start = Carbon::createFromTimestamp($newLog["startTimestamp"]);
             $log->save();
         } else {
-            error_log("timer is not running");
-
+            //  timer is not running therefore save the posted data as previouslog, also update timerRunning to True
             $previouslog = $newarray;
             $previouslog["startTimestamp"] =  Carbon::now()->timestamp;
             $timerData = TimerData::find(1);
             $timerData->previousLog    =  $previouslog;
             $timerData->timerRunning    =  true;
-
-            error_log(print_r($previouslog, true));
             $timerData->save();
         }
-
-
-
-
-
-
-
-
-
-
 
         return redirect('/');
     }
