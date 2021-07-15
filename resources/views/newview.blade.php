@@ -22,6 +22,8 @@
     <!-- Scripts -->
     {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
     <script src="{{ asset('js/newview.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -41,7 +43,7 @@
 
     </script>
     {{-- dit hier laten als je dit verwijderd begint het dashboard te knipperen --}}
-    {{ $timerRunning }}
+    {{-- {{ $timerRunning }} --}}
 
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary center">
@@ -54,25 +56,20 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav " style="font-size: 1.6em">
-                    <a class="nav-item nav-link active" href="{{ route('TimerData.readData') }}">Dashboard <span
-                            class="sr-only">(current)</span></a>
-                    <a class="nav-item nav-link" href="{{ route('ConfigData.index') }}">Config</a>
-                    <a class="nav-item nav-link" href="{{ route('post.index') }}">Diary</a>
-                    <a class="nav-item nav-link" href="{{ route('Logs.index') }}">Logs</a>
-                        {{-- log out code --}}
+                <a class="nav-item nav-link active" href="{{ route('TimerData.readData') }}">Dashboard</a>          
+                <a class="nav-item nav-link" href="{{ route('ConfigData.index') }}">Config</a>
+                <a class="nav-item nav-link" href="{{ route('post.index') }}">Diary</a>
+                <a class="nav-item nav-link" href="{{ route('Logs.index') }}">Logs</a>
+                <a class="nav-item nav-link" href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                              document.getElementById('logout-form').submit();">
+                 {{ __('Logout') }}
+             </a>
 
-                    <a class="nav-item nav-link justify-content-end" href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                                  document.getElementById('logout-form').submit();">
-                     {{ __('Logout') }}
-                 </a>
-
-                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                     @csrf
-                 </form>       
-                
-                
-                </div>
+             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                 @csrf
+             </form> 
+            </div>
 
                 
             </div>
@@ -97,7 +94,8 @@
 
                                 <div class="form-group row d-flex justify-content-between">
                                     {{-- margin needs to be 10px else bootstrap will malfunction --}}
-                                    <h3 style="margin: 10px" id="timer">00:00</h3>
+                                    
+                                    <h3 style="margin: 0px" id="timer">00:00</h3>
                                     <div class="">
                                         @if ($timerRunning == true)
                                             <input class="btn btn-primary" type="submit" value="stoppen">
@@ -317,10 +315,10 @@
     <div class="row mt-3">
         <div class="container-fluid" style="max-width: 1600px">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-6 d-flex">
                   {{-- Diary card  --}}
 
-                    <div class="card">
+                    <div class="card flex-fill ">
                         <div class="card-header">Diary</div>
                         <div class="card-body">
                             <form action="{{ route('Post.create') }}" method="POST">
@@ -346,11 +344,15 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6">{{-- Statistics card --}}
-                    <div class="card">
+                <div class="col-sm-6 d-flex">{{-- Statistics card --}}
+                    <div class="card flex-fill">
                         <div class="card-header">Statistics</div>
-                        <div class="card-body">
-                            <canvas id="chart"></canvas>
+                        <div class="card-body ">
+                            <div>
+                                <canvas style="min-height: 100px" id="chart"></canvas>
+
+
+                            </div>
 
                         </div>
                     </div>

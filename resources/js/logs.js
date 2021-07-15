@@ -675,8 +675,8 @@ const createDataSets = (actData, fixedData, scaledData) => {
         let dataset = {}
         dataset["label"] = actDat.rowOption.mainActivities + " " + actDat.rowOption.subActivities + " " + actDat.rowOption.output
         dataset["data"] = actDat.cellValues
-        dataset["backgroundColor"] = colorScheme[index]
-        dataset.borderColor = colorScheme[index]
+        dataset["backgroundColor"] = colorScheme[colourCount]
+        dataset.borderColor = colorScheme[colourCount]
         if (actDat.rowOption.output == logCount) {
             dataset.yAxisID = "y1"
         } else {
@@ -693,8 +693,8 @@ const createDataSets = (actData, fixedData, scaledData) => {
         let dataset = {}
         dataset["label"] = fixedDat.rowOption.fixedOptions + " " + fixedDat.fixedSuboption + " " + fixedDat.rowOption.mainActivities + " " + fixedDat.rowOption.subActivities + " " + fixedDat.rowOption.output
         dataset["data"] = fixedDat.cellValues
-        dataset["backgroundColor"] = colorScheme[index]
-        dataset.borderColor = colorScheme[index]
+        dataset["backgroundColor"] = colorScheme[colourCount]
+        dataset.borderColor = colorScheme[colourCount]
         if (fixedDat.rowOption.output == logCount) {
             dataset.yAxisID = "y1"
         } else {
@@ -710,8 +710,8 @@ const createDataSets = (actData, fixedData, scaledData) => {
         let dataset = {}
         dataset["label"] = scaledDat.rowOption.scaledOptions + " " + scaledDat.rowOption.mainActivities + " " + scaledDat.rowOption.subActivities + " " + scaledDat.rowOption.output
         dataset["data"] = scaledDat.cellValues
-        dataset["backgroundColor"] = colorScheme[index]
-        dataset.borderColor = colorScheme[index]
+        dataset["backgroundColor"] = colorScheme[colourCount]
+        dataset.borderColor = colorScheme[colourCount]
         dataset.yAxisID = "y1" // since scaled data goes from 0 -10 it allways needs to be put on the y1 axis.
 
 

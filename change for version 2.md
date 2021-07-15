@@ -12,3 +12,5 @@
 
 9:// additional function for now only row options can be added, they cannot be removed
 10: Need to add a page to edit or remove a log.
+
+11: graph colours heeft een probleem

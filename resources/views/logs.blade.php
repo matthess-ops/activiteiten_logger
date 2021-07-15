@@ -23,6 +23,7 @@ be logs that have this value. This could be fixed by checking the selected logs 
     <!-- Scripts -->
  
     <script src="{{ asset('js/logs.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Styles -->
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">

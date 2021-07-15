@@ -47,8 +47,12 @@ class PostsController extends Controller
                 # code...
                 break;
         }
-        $postData = Post::paginate(8);
-        return view('posts',compact('postData'));    }
+        // $postData = Post::paginate(8);
+        // return view('posts',compact('postData'));    
+        // $this->testData();
+
+        return redirect("posts");
+    }
 
     // create a new post message
     public function create(Request $request)
